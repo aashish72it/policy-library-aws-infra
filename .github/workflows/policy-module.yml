@@ -16,3 +16,4 @@ jobs:
         with:
           config-file: .github/.policy-module-config.json
           manifest-file: .github/.policy-module-manifest.json
+          token: ${{ secrets.CICD_PAT }}
