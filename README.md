@@ -33,6 +33,8 @@ Use the **Sentinel CLI** with `tfplan/v2` mock data to test policies locally.
 See HashiCorp tutorial: *Write a Sentinel policy for a Terraform deployment*. [6](https://xfuture-blog.com/posts/automating-builds-and-releases-with-conventional-commits-and-semantic-versioning/)
 
 
+# Project Structure
+
 <pre>
 
 policy-library-aws-infra/
