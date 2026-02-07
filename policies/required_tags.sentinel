@@ -1,0 +1,19 @@
+import "tfplan/v2" as tfplan
+import "common"
+
+required = ["Owner", "Env"]
+
+types = [
+  "aws_instance",
+  "aws_s3_bucket"
+]
+
+main = rule {
+  all types as t {
+    res = common.get_resources(t)
+    all res as r {
+      tags = common.get_tags(r.change.after)
+      all required as k { tags[k] is not null and length(trim(tags[k])) > 0 }
+    }
+  }
+}

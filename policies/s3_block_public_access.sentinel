@@ -1,0 +1,17 @@
+import "tfplan/v2" as tfplan
+import "common"
+
+pabs = tfplan.resource_changes["aws_s3_bucket_public_access_block"]
+
+is_strict = func(pab) {
+  after = pab.change.after
+  after.block_public_acls and
+  after.block_public_policy and
+  after.ignore_public_acls and
+  after.restrict_public_buckets
+}
+
+main = rule {
+  # If any PAB is planned, it must be strict; if a bucket is planned, expect a strict PAB as well.
+  all pabs as pab { is_strict(pab) }
+}
