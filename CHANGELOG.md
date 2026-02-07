@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.2...v0.1.3) (2026-02-07)
+
+
+### Bug Fixes
+
+* **readme:** removed some text ([299ff18](https://github.com/aashish72it/policy-library-aws-infra/commit/299ff184052139a32bb5e399796caa01f0159552))
+* **readme:** removed some text ([e4ae54e](https://github.com/aashish72it/policy-library-aws-infra/commit/e4ae54ec4d9956a94d34ae3ce5a2e4558e4b3aa6))
+
 ## [0.1.2](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.1...v0.1.2) (2026-02-07)
 
 
