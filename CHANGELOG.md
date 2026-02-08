@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.3](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.2.2...v0.2.3) (2026-02-08)
+
+
+### Bug Fixes
+
+* **Policies:** Fixed the comment in Sentinel.hcl ([da7ae1a](https://github.com/aashish72it/policy-library-aws-infra/commit/da7ae1a2824e31e9953ed657eb170fc9bbd0e2e8))
+* **Policies:** Fixed the comment in Sentinel.hcl ([7c7ce42](https://github.com/aashish72it/policy-library-aws-infra/commit/7c7ce42783d83e4f32fbb3c27e6194765f071ecd))
+* **Policies:** Fixed the comment in Sentinel.hcl ([7e4e36c](https://github.com/aashish72it/policy-library-aws-infra/commit/7e4e36cacd9bacc62f232603f6bf79a5318bb6a1))
+
 ## [0.2.2](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.2.1...v0.2.2) (2026-02-08)
 
 
