@@ -1,0 +1,5 @@
+allowed_types = ["t2.micro", "t3.micro", "t3a.micro"]
+
+is_allowed_instance = func(resource) {
+    return resource.applied.instance_type in allowed_types
+}
