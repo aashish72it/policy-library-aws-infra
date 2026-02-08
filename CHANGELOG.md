@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.5...v0.2.0) (2026-02-08)
+
+
+### Features
+
+* **Policies:** added policies ([3e9880f](https://github.com/aashish72it/policy-library-aws-infra/commit/3e9880f03b4460320b78c6e36600f530bd619690))
+* **Policies:** added policies ([b655be7](https://github.com/aashish72it/policy-library-aws-infra/commit/b655be7dab97f4371ba27e6ca14e42958b8471e1))
+
 ## [0.1.5](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.4...v0.1.5) (2026-02-08)
 
 
