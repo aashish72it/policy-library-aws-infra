@@ -14,7 +14,7 @@ module "ec2_utils" {
 # Policies
 policy "s3_require_encryption" {
   source = "./policies/s3_require_encryption.sentinel"
-  enforcement_level = "hard-mandatory" # Registry ignores, safe to keep :contentReference[oaicite:1]{index=1}
+  enforcement_level = "hard-mandatory"
 
   params = {
     allowed_sse_algorithms = ["aws:kms", "AES256"]
