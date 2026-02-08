@@ -1,6 +1,6 @@
-############################################
+# ###########################################
 # Modules
-############################################
+# ###########################################
 module "common" {
   source = "./modules/common.sentinel"
 }
@@ -13,9 +13,9 @@ module "ec2_utils" {
   source = "./modules/ec2_utils.sentinel"
 }
 
-############################################
+# ###########################################
 # Policies
-############################################
+# ###########################################
 policy "s3_require_encryption" {
   source            = "./policies/s3_require_encryption.sentinel"
   enforcement_level = "hard-mandatory"
