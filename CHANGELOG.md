@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.3...v0.1.4) (2026-02-08)
+
+
+### Bug Fixes
+
+* updated the structure ([caabfd5](https://github.com/aashish72it/policy-library-aws-infra/commit/caabfd5a9fe3b40bd94983a1fcdda15eb2f2635a))
+
 ## [0.1.3](https://github.com/aashish72it/policy-library-aws-infra/compare/v0.1.2...v0.1.3) (2026-02-07)
 
 
