@@ -19,18 +19,11 @@ Sentinel policy library to govern AWS infra created by Terraform. Includes S3 co
 policy-library-aws-infra/
 ├── README.md
 ├── sentinel.hcl
-├── policies/
+├── modules/
 │   ├── common.sentinel
-│   ├── s3_require_encryption.sentinel
-│   ├── s3_block_public_access.sentinel
-│   ├── s3_require_versioning.sentinel
-│   ├── ec2_instance_type_allowlist.sentinel
-│   └── required_tags.sentinel
-└── terraform/
-    └── attach-policy-set/
-        ├── main.tf
-        ├── variables.tf
-        └── versions.tf
+│   ├── s3_utils.sentinel
+│   └── ec2_utils.sentinel
+└── LICENSE
 
 
 </pre>

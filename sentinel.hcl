@@ -1,23 +1,11 @@
-policy "s3_require_encryption" {
-  source = "./policies/s3_require_encryption.sentinel"
-}
-
-policy "s3_block_public_access" {
-  source = "./policies/s3_block_public_access.sentinel"
-}
-
-policy "s3_require_versioning" {
-  source = "./policies/s3_require_versioning.sentinel"
-}
-
-policy "ec2_instance_type_allowlist" {
-  source = "./policies/ec2_instance_type_allowlist.sentinel"
-}
-
-policy "required_tags" {
-  source = "./policies/required_tags.sentinel"
-}
-
 module "common" {
-  source = "./policies/common.sentinel"
+  source = "./modules/common.sentinel"
+}
+
+module "s3_utils" {
+  source = "./modules/s3_utils.sentinel"
+}
+
+module "ec2_utils" {
+  source = "./modules/ec2_utils.sentinel"
 }

@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  tf-module:
+  policy-module:
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
