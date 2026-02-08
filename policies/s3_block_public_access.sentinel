@@ -1,0 +1,67 @@
+import "tfplan/v2" as tfplan
+import "common"
+
+param require_all_flags default true
+
+# Check that a bucket-level public access block is set with all 4 flags true.
+valid_pab = func(rc) {
+  cfg = rc.applied
+  if cfg is null { return false }
+
+  flags = [
+    cfg.block_public_acls is true,
+    cfg.block_public_policy is true,
+    cfg.ignore_public_acls is true,
+    cfg.restrict_public_buckets is true,
+  ]
+
+  if require_all_flags {
+    return all flags as _, f { f }
+  }
+  # If not strict, at least one true is acceptable
+  return any flags as _, f { f }
+}
+
+bucket_changes = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed" and rc.type is "aws_s3_bucket" and rc.applied is not null
+  }
+]
+
+bucket_pabs = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed" and rc.type is "aws_s3_bucket_public_access_block" and valid_pab(rc)
+  }
+]
+
+account_pabs = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed" and rc.type is "aws_s3_account_public_access_block" and valid_pab(rc)
+  }
+]
+
+has_valid_account_pab = length(account_pabs) > 0
+
+bucket_with_pab = func(bucket_name) {
+  any bucket_pabs as _, pab {
+    pab.applied.bucket is not null and pab.applied.bucket == bucket_name
+  }
+}
+
+violations = [
+  b for bucket_changes as _, b {
+    name = b.applied.bucket != null ? b.applied.bucket : b.name
+    not has_valid_account_pab and not bucket_with_pab(name)
+  }
+]
+
+main = rule {
+  length(violations) is 0
+}
+
+if length(violations) > 0 {
+  print("All S3 buckets must have Public Access Block fully enabled (all 4 flags true).")
+  print("Either an account-level PAB must be present in this plan or each bucket must have a bucket-level PAB.")
+  print("Buckets missing PAB in this plan:")
+  for violations as _, v { print("- ", v.address) }
+}

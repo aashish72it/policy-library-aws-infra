@@ -1,0 +1,29 @@
+import "tfplan/v2" as tfplan
+import "common"
+import "s3_utils"
+
+# Prefer using your library helper if available:
+#   s3_utils.is_versioning_enabled(rc) → bool
+is_enabled = func(rc) {
+  v = rc.applied.versioning
+  return v is not null and v.enabled is true
+}
+
+violations = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed"
+      and rc.type is "aws_s3_bucket"
+      and rc.applied is not null
+      and not (s3_utils.is_versioning_enabled(rc) or is_enabled(rc))
+  }
+]
+
+main = rule {
+  length(violations) is 0
+}
+
+if length(violations) > 0 {
+  print("S3 bucket versioning must be enabled.")
+  print("Non-compliant buckets:")
+  for violations as _, v { print("- ", v.address) }
+}

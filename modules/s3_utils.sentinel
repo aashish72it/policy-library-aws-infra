@@ -1,3 +1,5 @@
 is_versioning_enabled = func(resource) {
-    return resource.applied.versioning.enabled is true
+  if resource.applied is null { return false }
+  v = resource.applied.versioning
+  return v is not null and v.enabled is true
 }

@@ -1,0 +1,58 @@
+import "tfplan/v2" as tfplan
+import "common"
+
+param required_tag_keys  default ["Environment", "Owner", "CostCenter"]
+param allowed_tag_values default { Environment = ["dev", "test", "stage", "prod"] }
+
+# Determine if a resource has tags map in the applied state
+has_tags_map = func(rc) {
+  t = rc.applied.tags
+  t is not null and type(t) is "map"
+}
+
+# Validate presence of required tag keys
+has_required_keys = func(tags) {
+  all required_tag_keys as _, key {
+    key in keys(tags) and tags[key] is not null and tags[key] != ""
+  }
+}
+
+# Validate allowed values when constraints are provided
+values_ok = func(tags) {
+  all keys(allowed_tag_values) as _, key {
+    # If resource has the tag, check against allowed values; if absent, the "required" check will fail separately.
+    (tags[key] is null) or (tags[key] in allowed_tag_values[key])
+  }
+}
+
+# Consider AWS managed resources that commonly support tags (generic guard)
+candidates = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed"
+      and rc.applied is not null
+      # Evaluate any resource exposing 'tags' (broad, works for most AWS resources)
+      and has_tags_map(rc)
+  }
+]
+
+violations = [
+  rc for candidates as _, rc {
+    tags = rc.applied.tags
+    not (has_required_keys(tags) and values_ok(tags))
+  }
+]
+
+main = rule {
+  length(violations) is 0
+}
+
+if length(violations) > 0 {
+  print("Required tags: ", required_tag_keys)
+  if length(keys(allowed_tag_values)) > 0 {
+    print("Allowed tag values (constraints): ", allowed_tag_values)
+  }
+  print("Resources missing/violating required tags:")
+  for violations as _, v {
+    print("- ", v.address)
+  }
+}
