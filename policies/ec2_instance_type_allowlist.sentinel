@@ -1,0 +1,37 @@
+import "tfplan/v2" as tfplan
+import "common"
+import "ec2_utils"
+
+param allowed_instance_types default ["t3.micro", "t3a.micro", "t3.small", "t3a.small"]
+
+# Prefer module helper; fallback uses param list directly.
+is_allowed = func(rc) {
+  (ec2_utils.is_allowed_instance(rc)) or (
+    rc.applied.instance_type in allowed_instance_types
+  )
+}
+
+targets = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed"
+      and rc.type is "aws_instance"
+      and rc.applied is not null
+  }
+]
+
+violations = [
+  rc for targets as _, rc { not is_allowed(rc) }
+]
+
+main = rule {
+  length(violations) is 0
+}
+
+if length(violations) > 0 {
+  print("EC2 instance type must be in the allowlist: ", allowed_instance_types)
+  print("Non-compliant instances:")
+  for violations as _, v {
+    t = v.applied.instance_type
+    print("- ", v.address, " (", t, ")")
+  }
+}

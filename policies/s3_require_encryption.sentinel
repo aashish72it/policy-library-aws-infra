@@ -1,0 +1,50 @@
+import "tfplan/v2" as tfplan
+import "common"
+import "s3_utils"
+
+# Parameters from sentinel.hcl
+param allowed_sse_algorithms default ["aws:kms", "AES256"]
+param require_kms default true
+
+# Returns true if the bucket's SSE config passes policy.
+validate_bucket_sse = func(rc) {
+  sse = rc.applied.server_side_encryption_configuration
+
+  # Must exist
+  if sse is null { return false }
+
+  # Expect at least one rule
+  rules = sse.rules
+  if rules is null or length(rules) == 0 { return false }
+
+  # Validate any rule meets requirements
+  any rules as _, rule {
+    defcfg = rule.apply_server_side_encryption_by_default
+    defcfg is not null
+      and defcfg.sse_algorithm in allowed_sse_algorithms
+      and (
+        require_kms is false
+        or (defcfg.sse_algorithm == "aws:kms" and defcfg.kms_master_key_id is not null)
+      )
+  }
+}
+
+violations = [
+  rc for tfplan.resource_changes as _, rc {
+    rc.mode is "managed"
+      and rc.type is "aws_s3_bucket"
+      and rc.applied is not null
+      and not validate_bucket_sse(rc)
+  }
+]
+
+main = rule {
+  length(violations) is 0
+}
+
+if length(violations) > 0 {
+  print("S3 default encryption must be enabled with allowed algorithms: ", allowed_sse_algorithms)
+  if require_kms { print("KMS-backed encryption is required (aws:kms with kms_master_key_id).") }
+  print("Non-compliant buckets:")
+  for violations as _, v { print("- ", v.address) }
+}
